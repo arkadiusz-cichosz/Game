@@ -1,0 +1,26 @@
+{
+  "name": "game",
+  "version": "1.0.0",
+  "description": "Game exercise",
+  "main": "Gruntfile.js",
+  "dependencies": {
+    "grunt-contrib-sass": "^1.0.0"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "test"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/arkadiusz-cichosz/Game.git"
+  },
+  "keywords": [
+    "game"
+  ],
+  "author": "Arek Cichosz",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/arkadiusz-cichosz/Game/issues"
+  },
+  "homepage": "https://github.com/arkadiusz-cichosz/Game#readme"
+}
