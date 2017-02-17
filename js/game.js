@@ -1,108 +1,109 @@
-let newGameEl = document.getElementById('js-newGame');
-let newGameButton = document.getElementById('js-newGameButton');
-let choicePlayer = document.getElementById('js-choicePlayer');
-let resultsTable = document.getElementById('js-resultsTable');
+const newGameEl = document.getElementById('js-newGame'),
+	newGameButton = document.getElementById('js-newGameButton'),
+	choicePlayer = document.getElementById('js-choicePlayer'),
+	resultsTable = document.getElementById('js-resultsTable');
 
-let choiceRock = document.getElementById('js-choicePlayerRock');
-let choisePaper = document.getElementById('js-choicePlayerPaper');
-let choiseScissors = document.getElementById('js-choicePlayerScissors');
+document.getElementById('js-choicePlayerRock').addEventListener('click', function() { playerSet('rock') });
+document.getElementById('js-choicePlayerPaper').addEventListener('click', function() { playerSet('paper') });
+document.getElementById('js-choicePlayerScissors').addEventListener('click', function() { playerSet('scissors') });
 
 newGameButton.addEventListener('click', newGame);
-choiceRock.addEventListener('click', function() { playerSet('rock') });
-choisePaper.addEventListener('click', function() { playerSet('paper') });
-choiseScissors.addEventListener('click', function() { playerSet('scissors') });
 
 let gameState = 'notStarted';  //started // ended
 let isTenPoints = false;
 
-let player = {
-        name: '',
-        score: 0
-    },
-    computer = {
-        score: 0
-    };
+const player = {
+		name: '',
+		score: 0
+	},
+	computer = {
+		score: 0
+	};
 
-let playerName = document.getElementById('js-playerName'),
+const playerName = document.getElementById('js-playerName'),
 	playerPickElem = document.getElementById('js-playerPick'),
-    computerPickElem = document.getElementById('js-computerPick'),
-    playerResultElem = document.getElementById('js-playerResult'),
-    computerResultElem = document.getElementById('js-computerResult'),
-    playerPointsElem = document.getElementById('js-playerPoints'),
-    playerNameElem = document.getElementById('js-playerName'),
-    computerPointsElem = document.getElementById('js-computerPoints');
+	playerResultElem = document.getElementById('js-playerResult'),
+	playerPointsElem = document.getElementById('js-playerPoints'),    
+	
+	computerPickElem = document.getElementById('js-computerPick'),
+	computerResultElem = document.getElementById('js-computerResult'),
+	computerPointsElem = document.getElementById('js-computerPoints');
 
 
 function setGameElements() {
 	switch(gameState) {
-    	case 'started':
-        	newGameEl.style.display = 'none';
-        	choicePlayer.style.display = 'block';
-        	resultsTable.style.display = 'block';
-      		break;
-    	case 'ended':
-        	newGameButton.innerText = 'Jeszcze raz';
-    	case 'notStarted':
-    	default:
-       		newGameEl.style.display = 'block';
-        	choicePlayer.style.display = 'none';
-        	resultsTable.style.display = 'none';
+		case 'started':
+			newGameEl.style.display = 'none';
+			choicePlayer.style.display = 'block';
+			resultsTable.style.display = 'block';
+			break;
+		case 'ended':
+			newGameButton.innerText = 'Jeszcze raz';
+		case 'notStarted':
+		default:
+			newGameEl.style.display = 'block';
+			choicePlayer.style.display = 'none';
+			resultsTable.style.display = 'none';
 	}
 }
 
 function newGame() {
 	player.name = prompt('Podaj swoje imię', 'Imię gracza');
-  	if (player.name) {
-    	player.score = computer.score = 0;
-    	gameState = 'started';
-    	isTenPoints = false;
-    	setGameElements();
+	if (player.name) {
+		player.score = computer.score = 0;
 		playerName.innerHTML = player.name;
-    	setGamePoints();
-  	}
+
+		gameState = 'started';
+		isTenPoints = false;
+
+		setGameElements();
+		setGamePoints();
+	} else {
+		newGame();
+	}
 }
 
 function getComputerPick() {
-    let possiblePicks = ['rock', 'paper', 'scissors'];
-    return possiblePicks[Math.floor(Math.random() * 3)];
+	const possiblePicks = ['rock', 'paper', 'scissors'];
+	return possiblePicks[Math.floor(Math.random() * 3)];
 }
 
 function checkRoundWinner(playerPick, computerPick) {
   playerResultElem.innerHTML = computerResultElem.innerHTML = '';
 
-  let winnerIs = 'player';
+let winnerIs = 'player';
 
-    if (playerPick == computerPick) {
-        winnerIs = 'noone'; // remis
-    } else if (
-        (computerPick == 'rock' &&  playerPick == 'scissors') ||
-        (computerPick == 'scissors' &&  playerPick == 'paper') ||
-        (computerPick == 'paper' &&  playerPick == 'rock') ) {
-        
-        winnerIs = 'computer';
-    }
+	if (playerPick == computerPick) {
+		winnerIs = 'noone'; // remis
+	} else if (
+		(computerPick == 'rock' &&  playerPick == 'scissors') ||
+		(computerPick == 'scissors' &&  playerPick == 'paper') ||
+		(computerPick == 'paper' &&  playerPick == 'rock') ) {
+		
+		winnerIs = 'computer';
+	}
 
-    if (winnerIs == 'player') {
-        playerResultElem.innerHTML = "Wygrana!";
-        player.score++;
-    } else if (winnerIs == 'computer') {
-        computerResultElem.innerHTML = "Wygrana!";
-        computer.score++;
-    }
+	if (winnerIs == 'player') {
+		playerResultElem.innerHTML = "Wygrana!";
+		player.score = player.score + 1;
+	} else if (winnerIs == 'computer') {
+		computerResultElem.innerHTML = "Wygrana!";
+		computer.score = computer.score + 1;
+	}
 }
 
 function playerSet(playerPick) {
-    let computerPick = getComputerPick(); 
-    playerPickElem.innerHTML = playerPick;
-    computerPickElem.innerHTML = computerPick;
-    checkRoundWinner(playerPick, computerPick);
-    setGamePoints();
-    checkEndWinner();
+	let computerPick = getComputerPick(); 
+	playerPickElem.innerHTML = playerPick;
+	computerPickElem.innerHTML = computerPick;
+	checkRoundWinner(playerPick, computerPick);
+	setGamePoints();
+	setTimeout(checkEndWinner, 0);
 }
 
 function setGamePoints() {
-    playerPointsElem.innerHTML = player.score;
-    computerPointsElem.innerHTML = computer.score;
+	playerPointsElem.innerHTML = player.score;
+	computerPointsElem.innerHTML = computer.score;
 }
 
 function checkEndWinner() {
